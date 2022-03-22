@@ -1,0 +1,25 @@
+<button mat-raised-button routerLink="/cocktail-search">
+    <mat-icon>arrow_back</mat-icon>
+    Back
+</button>
+<div *ngIf="drink" class="main-info">
+    <cocktails-cocktail-card [drink]="drink" [navigable]="false"></cocktails-cocktail-card>
+    <div>
+        <h3>How to make it!</h3>
+        <div>{{drink.strInstructions}}</div>
+    </div>
+</div>
+<h3>Ingredients</h3>
+<ol>
+    <li *ngFor="let drinkIngredient of drinkIngredients">
+        <span>{{drinkIngredient.display}}</span>
+    </li>
+</ol>
+<ng-container *ngIf="tags.length > 0">
+    <h3>Tags</h3>
+    <ul>
+        <li *ngFor="let tag of tags">
+            <span>{{tag}}</span>
+        </li>
+    </ul>
+</ng-container>

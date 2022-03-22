@@ -9,7 +9,8 @@ import { Drink } from '../models/drink.model';
 export class CocktailCardComponent implements OnInit {
 
     // Interface Properties
-    @Input() cocktail: Drink;
+    @Input() drink: Drink;
+    @Input() navigable = true;
 
     // Local Properties
 

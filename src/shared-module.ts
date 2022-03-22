@@ -6,6 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from "@angular/common";
+import { MatIconModule } from '@angular/material/icon';
 
 const commonModules = [
     MatFormFieldModule,
@@ -14,7 +15,8 @@ const commonModules = [
     FormsModule,
     HttpClientModule,
     MatCardModule,
-    CommonModule
+    CommonModule,
+    MatIconModule
 ];
 
 @NgModule({

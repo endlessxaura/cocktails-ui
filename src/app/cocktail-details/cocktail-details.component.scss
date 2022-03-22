@@ -1,0 +1,9 @@
+.main-info {
+    display: flex;
+    margin-top: 10px;
+}
+
+.main-info > cocktails-cocktail-card {
+    flex: 0 0 content;
+    margin: 0 16px;
+}

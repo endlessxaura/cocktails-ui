@@ -1,9 +1,20 @@
-<mat-card tabindex="0">
-    <div class="grid">
-        <img [src]="cocktail.strDrinkThumb" />
-        <div>
-            <span><b>{{cocktail.strDrink}}</b></span>
-            <span>{{cocktail.strCategory}}</span>
+<a *ngIf="navigable" routerLink="/cocktail-details/{{drink.idDrink}}" [attr.aria-label]="drink.strDrink">
+    <ng-container *ngTemplateOutlet="cardTemplate"></ng-container>
+</a>
+<ng-container *ngIf="!navigable">
+    <ng-container *ngTemplateOutlet="cardTemplate"></ng-container>
+</ng-container>
+
+<ng-template #cardTemplate>
+    <mat-card tabindex="0">
+        <div class="grid">
+            <img [src]="drink.strDrinkThumb" />
+            <div>
+                <span><b>{{drink.strDrink}}</b></span>
+                <span>{{drink.strCategory}}</span>
+                <span>{{drink.strAlcoholic}}</span>
+                <span>{{drink.strGlass}}</span>
+            </div>
         </div>
-    </div>
-</mat-card>
+    </mat-card>
+</ng-template>
