@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
 import { HeaderModule } from './header/header.module';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { CocktailCardComponent } from './cocktail-card/cocktail-card.component';
 
 @NgModule({
     declarations: [
@@ -17,7 +19,9 @@ import { HeaderModule } from './header/header.module';
         BrowserAnimationsModule,
         HeaderModule
     ],
-    providers: [],
+    providers: [
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

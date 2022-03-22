@@ -1,0 +1,14 @@
+.search-row {
+    display: flex;
+    align-items: baseline;
+}
+
+.search-row > * {
+    margin-right: 5px;
+}
+
+.cocktails-display {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}

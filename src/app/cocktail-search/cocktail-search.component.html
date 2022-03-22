@@ -1,1 +1,11 @@
-<p>cocktail-search works!</p>
+<div class="search-row">
+    <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="name" (keyup)="queueRefetch()">
+    </mat-form-field>
+</div>
+<div class="cocktails-display">
+    <div *ngFor="let drink of drinks">
+        <cocktails-cocktail-card [cocktail]="drink"></cocktails-cocktail-card>
+    </div>
+</div>

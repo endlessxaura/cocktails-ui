@@ -1,0 +1,24 @@
+mat-card {
+    margin: 10px;
+}
+
+// mat-card:hover {
+//     background: lightgrey;
+// }
+
+img {
+    max-width: 15vw;
+}
+
+.grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid > div {
+    margin-left: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
