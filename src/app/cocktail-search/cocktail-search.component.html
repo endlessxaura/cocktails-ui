@@ -12,6 +12,15 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
+    <mat-form-field>
+        <mat-label>Glass</mat-label>
+        <mat-select [(ngModel)]="glassSearch" (selectionChange)="applyGlassFilter()">
+            <mat-option [value]="null"></mat-option>
+            <mat-option *ngFor="let glass of glasses" [value]="glass.strGlass">
+                {{glass.strGlass}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
 <div class="cocktails-display">
     <div *ngFor="let drink of filteredDrinks">
