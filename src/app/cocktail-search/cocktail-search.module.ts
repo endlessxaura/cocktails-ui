@@ -1,9 +1,10 @@
 import { NgModule } from "@angular/core";
 import { SharedModule } from "src/shared-module";
 import { CocktailCardModule } from "../cocktail-card/cocktail-card.module";
+import { CocktailService } from "../services/cocktail.service";
+import { IngredientService } from "../services/ingredient.service";
 import { CocktailSearchRoutingModule } from "./cocktail-search-routing.module";
 import { CocktailSearchComponent } from "./cocktail-search.component";
-import { CocktailSearchService } from "./cocktail-search.service";
 
 @NgModule({
     declarations: [CocktailSearchComponent],
@@ -13,7 +14,8 @@ import { CocktailSearchService } from "./cocktail-search.service";
         CocktailCardModule
     ],
     providers: [
-        CocktailSearchService
+        CocktailService,
+        IngredientService
     ]
 })
 export class CocktailSearchModule { }

@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 const commonModules = [
     MatFormFieldModule,
@@ -16,7 +17,8 @@ const commonModules = [
     HttpClientModule,
     MatCardModule,
     CommonModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule
 ];
 
 @NgModule({

@@ -3,9 +3,18 @@
         <mat-label>Name</mat-label>
         <input matInput [(ngModel)]="name" (keyup)="queueRefetch()">
     </mat-form-field>
+    <mat-form-field>
+        <mat-label>Ingredient</mat-label>
+        <mat-select [(ngModel)]="ingredientSearch" (selectionChange)="applyIngredientFilter()">
+            <mat-option [value]="null"></mat-option>
+            <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient.strIngredient1">
+                {{ingredient.strIngredient1}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
 <div class="cocktails-display">
-    <div *ngFor="let drink of drinks">
+    <div *ngFor="let drink of filteredDrinks">
         <cocktails-cocktail-card [drink]="drink"></cocktails-cocktail-card>
     </div>
 </div>

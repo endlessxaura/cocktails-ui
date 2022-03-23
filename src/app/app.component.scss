@@ -1,3 +1,9 @@
-.router-outlet {
-    padding: 0 10px;
+:host {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+div {
+    overflow: auto;
 }

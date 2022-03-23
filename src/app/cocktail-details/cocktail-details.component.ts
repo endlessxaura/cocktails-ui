@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DrinkIngredient } from '../models/drink-ingredient.model';
 import { Drink } from '../models/drink.model';
-import { CocktailDetailsService } from './cocktail-details.service';
+import { CocktailService } from '../services/cocktail.service';
 
 @Component({
     selector: 'cocktails-cocktail-details',
@@ -19,14 +19,14 @@ export class CocktailDetailsComponent implements OnInit {
     // Constructor
     constructor(
         private route: ActivatedRoute,
-        private cocktailDetailsService: CocktailDetailsService
+        private cocktailService: CocktailService
     ) { }
 
     // Event Functions
     ngOnInit(): void {
         this.route.params.subscribe(params => {
             if (params['id']) {
-                this.cocktailDetailsService.getCocktailById(params['id']).subscribe(drink => {
+                this.cocktailService.getCocktailById(params['id']).subscribe(drink => {
                     this.drink = drink;
                     if (this.drink) {
                         if (this.drink.strTags) {
