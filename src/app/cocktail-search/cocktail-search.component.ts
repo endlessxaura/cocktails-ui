@@ -16,7 +16,8 @@ class CocktailSearchFilter {
 enum CocktailSearchFilterTypes {
     Ingredient = 'Ingredient',
     Glass = 'Glass',
-    Category = 'Category'
+    Category = 'Category',
+    Alcholic = 'Alcoholic'
 }
 
 @Component({
@@ -49,6 +50,12 @@ export class CocktailSearchComponent implements OnInit {
             filterPrefix: 'c=',
             drinks: [],
             options: []
+        },
+        [CocktailSearchFilterTypes.Alcholic]: {
+            searchString: '',
+            filterPrefix: 'a=',
+            drinks: [],
+            options: []
         }
     };
     searchFilterTypes = Object.keys(this.searchFilters);
@@ -73,6 +80,9 @@ export class CocktailSearchComponent implements OnInit {
         });
         this.cocktailService.getCategories().subscribe(categoryList => {
             this.searchFilters[CocktailSearchFilterTypes.Category].options = categoryList.drinks.map(drink => drink.strCategory);
+        });
+        this.cocktailService.getAlcoholicOptions().subscribe(alcoholicList => {
+            this.searchFilters[CocktailSearchFilterTypes.Alcholic].options = alcoholicList.drinks.map(drink => drink.strAlcoholic);
         });
         this.fetchCocktails();
     }

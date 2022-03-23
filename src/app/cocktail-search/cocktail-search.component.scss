@@ -5,6 +5,7 @@
     align-items: baseline;
     padding: 1px 5px;
     background-color: $background-color;
+    flex-wrap: wrap;
 }
 
 .search-row > * {

@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable, take } from "rxjs";
+import { AlcoholicList } from "../models/alcoholic-list.model";
 import { CategoryList } from "../models/category-list.model";
 import { DrinkFilters } from "../models/drink-filters.model";
 import { Drink } from "../models/drink.model";
@@ -39,5 +40,9 @@ export class CocktailService {
 
     getCategories(): Observable<CategoryList> {
         return this.httpClient.get<CategoryList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list').pipe(take(1));
+    }
+
+    getAlcoholicOptions(): Observable<AlcoholicList> {
+        return this.httpClient.get<AlcoholicList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?a=list').pipe(take(1));
     }
 }
