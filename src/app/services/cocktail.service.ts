@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable, take } from "rxjs";
+import { CocktailSearchFilter, CocktailSearchFilterTypes } from "../cocktail-search/cocktail-search-filter.model";
 import { AlcoholicList } from "../models/alcoholic-list.model";
 import { CategoryList } from "../models/category-list.model";
 import { DrinkFilters } from "../models/drink-filters.model";
@@ -8,8 +9,39 @@ import { Drink } from "../models/drink.model";
 import { Drinks } from "../models/drinks.model";
 import { GlassList } from "../models/glass-list.model";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CocktailService {
+
+    // State Properties
+    nameFilter = '';
+    searchFilters: { [type: string]: CocktailSearchFilter } = {
+        [CocktailSearchFilterTypes.Ingredient]: {
+            searchString: '',
+            filterPrefix: 'i=',
+            drinks: [],
+            options: []
+        },
+        [CocktailSearchFilterTypes.Glass]: {
+            searchString: '',
+            filterPrefix: 'g=',
+            drinks: [],
+            options: []
+        },
+        [CocktailSearchFilterTypes.Category]: {
+            searchString: '',
+            filterPrefix: 'c=',
+            drinks: [],
+            options: []
+        },
+        [CocktailSearchFilterTypes.Alcholic]: {
+            searchString: '',
+            filterPrefix: 'a=',
+            drinks: [],
+            options: []
+        }
+    };
 
     // Constructor
     constructor(
@@ -26,7 +58,7 @@ export class CocktailService {
         );
     }
 
-    getCocktailsByName(name: string): Observable<Drinks> {
+    getCocktailsByName(name: string): Observable<Drinks | null> {
         return this.httpClient.get<Drinks>('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + name).pipe(take(1));
     }
 

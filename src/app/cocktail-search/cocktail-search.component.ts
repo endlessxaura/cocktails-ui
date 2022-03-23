@@ -5,20 +5,7 @@ import { GlassListFilter } from '../models/glass-list-item.model';
 import { IngredientListItem } from '../models/ingredient-list-item.model';
 import { CocktailService } from '../services/cocktail.service';
 import { IngredientService } from '../services/ingredient.service';
-
-class CocktailSearchFilter {
-    searchString: string | null = '';
-    filterPrefix = '';
-    drinks: DrinkFilter[] = [];
-    options: string[] = [];
-}
-
-enum CocktailSearchFilterTypes {
-    Ingredient = 'Ingredient',
-    Glass = 'Glass',
-    Category = 'Category',
-    Alcholic = 'Alcoholic'
-}
+import { CocktailSearchFilter, CocktailSearchFilterTypes } from './cocktail-search-filter.model';
 
 @Component({
     selector: 'cocktails-cocktail-search',
@@ -31,34 +18,7 @@ export class CocktailSearchComponent implements OnInit {
     drinks: Drink[] = [];
 
     // Filter Properties
-    name = '';
-    searchFilters: { [type: string]: CocktailSearchFilter } = {
-        [CocktailSearchFilterTypes.Ingredient]: {
-            searchString: '',
-            filterPrefix: 'i=',
-            drinks: [],
-            options: []
-        },
-        [CocktailSearchFilterTypes.Glass]: {
-            searchString: '',
-            filterPrefix: 'g=',
-            drinks: [],
-            options: []
-        },
-        [CocktailSearchFilterTypes.Category]: {
-            searchString: '',
-            filterPrefix: 'c=',
-            drinks: [],
-            options: []
-        },
-        [CocktailSearchFilterTypes.Alcholic]: {
-            searchString: '',
-            filterPrefix: 'a=',
-            drinks: [],
-            options: []
-        }
-    };
-    searchFilterTypes = Object.keys(this.searchFilters);
+    searchFilterTypes: string[] = [];
     filteredDrinks: Drink[] = [];
 
     // Other Properties
@@ -70,8 +30,25 @@ export class CocktailSearchComponent implements OnInit {
         private ingredientService: IngredientService
     ) { }
 
+    get nameFilter() {
+        return this.cocktailService.nameFilter;
+    }
+
+    set nameFilter(value: string) {
+        this.cocktailService.nameFilter = value;
+    }
+
+    get searchFilters(): { [type: string]: CocktailSearchFilter } {
+        return this.cocktailService.searchFilters;
+    }
+
+    set searchFilters(value: { [type: string]: CocktailSearchFilter }) {
+        this.cocktailService.searchFilters = value;
+    }
+
     // Event Functions
     ngOnInit(): void {
+        this.searchFilterTypes = Object.keys(this.searchFilters);
         this.ingredientService.getIngredients().subscribe(ingredientList => {
             this.searchFilters[CocktailSearchFilterTypes.Ingredient].options = ingredientList.drinks.map(drink => drink.strIngredient1);
         });
@@ -99,6 +76,22 @@ export class CocktailSearchComponent implements OnInit {
         }, 1000);
     }
 
+    fetchCocktails() {
+        // POST: obtains the data for the grid
+        this.cocktailService.getCocktailsByName(this.nameFilter).subscribe(drinksContainer => {
+            if (drinksContainer && drinksContainer.drinks) {
+                this.drinks = drinksContainer.drinks;
+            } else {
+                this.drinks = [];
+            }
+            this.applyFilter();
+        });
+        if (this.fetchTimeout) {
+            clearTimeout(this.fetchTimeout);
+            this.fetchTimeout = null;
+        }
+    }
+
     setFilterByType(type: string, newValue: string) {
         this.searchFilters[type].searchString = newValue;
         if (this.searchFilters[type].searchString) {
@@ -113,18 +106,6 @@ export class CocktailSearchComponent implements OnInit {
     }
 
     // Internal Methods
-    private fetchCocktails() {
-        // POST: obtains the data for the grid
-        this.cocktailService.getCocktailsByName(this.name).subscribe(drinksContainer => {
-            this.drinks = drinksContainer.drinks;
-            this.applyFilter();
-        });
-        if (this.fetchTimeout) {
-            clearTimeout(this.fetchTimeout);
-            this.fetchTimeout = null;
-        }
-    }
-
     private applyFilter() {
         // POST: crosses the filter with the data
         this.filteredDrinks = this.drinks.filter(drink => {
