@@ -13,7 +13,14 @@
     <h3>Ingredients</h3>
     <ol>
         <li *ngFor="let drinkIngredient of drinkIngredients">
-            <span>{{drinkIngredient.display}}</span>
+            <ng-container *ngIf="drinkIngredient.ingredient">
+                <ng-container *ngIf="drinkIngredient.measure">
+                    <span>{{drinkIngredient.measure}} of&nbsp;</span>
+                </ng-container>
+                <a *ngIf="drinkIngredient.includeLink" routerLink="/ingredient-search"
+                    [queryParams]="{name: drinkIngredient.ingredient}">{{drinkIngredient.ingredient}}</a>
+                <span *ngIf="!drinkIngredient.includeLink">{{drinkIngredient.ingredient}}</span>
+            </ng-container>
         </li>
     </ol>
     <ng-container *ngIf="tags.length > 0">

@@ -1,1 +1,30 @@
-<p>ingredient-search works!</p>
+<div class="search-row">
+    <mat-form-field>
+        <mat-label>Ingredient</mat-label>
+        <mat-select [ngModel]="ingredientSelection" (ngModelChange)="setIngredient($event)">
+            <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient">
+                {{ingredient}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div *ngIf="ingredient" class="ingredient-detail">
+    <table>
+        <tr>
+            <td>Type</td>
+            <td>{{ingredient.strType}}</td>
+        </tr>
+        <tr>
+            <td>Alcoholic</td>
+            <td>{{ingredient.strAlcohol}}</td>
+        </tr>
+        <tr>
+            <td>ABV</td>
+            <td>{{ingredient.strABV}}</td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td [innerHtml]="ingredient.strDescription"></td>
+        </tr>
+    </table>
+</div>

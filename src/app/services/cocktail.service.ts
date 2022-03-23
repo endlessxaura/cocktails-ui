@@ -35,14 +35,32 @@ export class CocktailService {
     }
 
     getGlasses(): Observable<GlassList> {
-        return this.httpClient.get<GlassList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list').pipe(take(1));
+        return this.httpClient.get<GlassList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list').pipe(
+            take(1),
+            map(glassList => {
+                glassList.drinks.sort((a, b) => a.strGlass.localeCompare(b.strGlass));
+                return glassList;
+            })
+        );
     }
 
     getCategories(): Observable<CategoryList> {
-        return this.httpClient.get<CategoryList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list').pipe(take(1));
+        return this.httpClient.get<CategoryList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list').pipe(
+            take(1),
+            map(categoryList => {
+                categoryList.drinks.sort((a, b) => a.strCategory.localeCompare(b.strCategory));
+                return categoryList;
+            })
+        );
     }
 
     getAlcoholicOptions(): Observable<AlcoholicList> {
-        return this.httpClient.get<AlcoholicList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?a=list').pipe(take(1));
+        return this.httpClient.get<AlcoholicList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?a=list').pipe(
+            take(1),
+            map(alcoholList => {
+                alcoholList.drinks.sort((a, b) => a.strAlcoholic.localeCompare(b.strAlcoholic));
+                return alcoholList;
+            })
+        );
     }
 }

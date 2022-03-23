@@ -1,5 +1,18 @@
 /* Installing Angular Material */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import './style-variables.scss';
 
 /* Global Styles */
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.search-row {
+    display: flex;
+    align-items: baseline;
+    padding: 1px 5px;
+    background-color: $background-color;
+    flex-wrap: wrap;
+}
+
+.search-row > * {
+    margin-right: 5px;
+}

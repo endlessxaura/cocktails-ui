@@ -3,21 +3,16 @@ export class DrinkIngredient {
     // Properties
     measure: string | null;
     ingredient: string;
+    includeLink = false;
 
     // Constructor
-    constructor(measure: string, ingredient: string) {
+    constructor(
+        measure: string,
+        ingredient: string,
+        includeLink = false
+    ) {
         this.measure = measure;
         this.ingredient = ingredient;
-    }
-
-    // Accessors
-    get display(): string {
-        if (this.measure && this.ingredient) {
-            return this.measure + ' of ' + this.ingredient;
-        } else if (this.ingredient) {
-            return this.ingredient;
-        } else {
-            return '';
-        }
+        this.includeLink = includeLink;
     }
 }
