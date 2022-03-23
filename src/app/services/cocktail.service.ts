@@ -1,10 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable, take } from "rxjs";
+import { CategoryList } from "../models/category-list.model";
 import { DrinkFilters } from "../models/drink-filters.model";
 import { Drink } from "../models/drink.model";
 import { Drinks } from "../models/drinks.model";
-import { GlassFilters } from "../models/glass-filters.model";
+import { GlassList } from "../models/glass-list.model";
 
 @Injectable()
 export class CocktailService {
@@ -28,15 +29,15 @@ export class CocktailService {
         return this.httpClient.get<Drinks>('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + name).pipe(take(1));
     }
 
-    getCocktailFilterByIngredient(ingredient: string): Observable<DrinkFilters> {
-        return this.httpClient.get<DrinkFilters>('https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=' + ingredient).pipe(take(1));
+    getCocktailsByFilter(filter: string): Observable<DrinkFilters> {
+        return this.httpClient.get<DrinkFilters>('https://www.thecocktaildb.com/api/json/v1/1/filter.php?' + filter).pipe(take(1));
     }
 
-    getCocktailFilterByGlass(glass: string): Observable<DrinkFilters> {
-        return this.httpClient.get<DrinkFilters>('https://www.thecocktaildb.com/api/json/v1/1/filter.php?g=' + glass).pipe(take(1));
+    getGlasses(): Observable<GlassList> {
+        return this.httpClient.get<GlassList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list').pipe(take(1));
     }
 
-    getGlasses(): Observable<GlassFilters> {
-        return this.httpClient.get<GlassFilters>('https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list').pipe(take(1));
+    getCategories(): Observable<CategoryList> {
+        return this.httpClient.get<CategoryList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list').pipe(take(1));
     }
 }

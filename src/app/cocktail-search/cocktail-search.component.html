@@ -3,24 +3,18 @@
         <mat-label>Name</mat-label>
         <input matInput [(ngModel)]="name" (keyup)="queueRefetch()">
     </mat-form-field>
-    <mat-form-field>
-        <mat-label>Ingredient</mat-label>
-        <mat-select [(ngModel)]="ingredientSearch" (selectionChange)="applyIngredientFilter()">
-            <mat-option [value]="null"></mat-option>
-            <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient.strIngredient1">
-                {{ingredient.strIngredient1}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-        <mat-label>Glass</mat-label>
-        <mat-select [(ngModel)]="glassSearch" (selectionChange)="applyGlassFilter()">
-            <mat-option [value]="null"></mat-option>
-            <mat-option *ngFor="let glass of glasses" [value]="glass.strGlass">
-                {{glass.strGlass}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+    <ng-container *ngFor="let searchFilterType of searchFilterTypes">
+        <mat-form-field>
+            <mat-label>{{searchFilterType}}</mat-label>
+            <mat-select [ngModel]="searchFilters[searchFilterType].searchString"
+                (ngModelChange)="setFilterByType(searchFilterType, $event)">
+                <mat-option [value]="null"></mat-option>
+                <mat-option *ngFor="let ingredient of searchFilters[searchFilterType].options" [value]="ingredient">
+                    {{ingredient}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-container>
 </div>
 <div class="cocktails-display">
     <div *ngFor="let drink of filteredDrinks">

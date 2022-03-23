@@ -1,10 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { DrinkFilter } from '../models/drink-filter.model';
 import { Drink } from '../models/drink.model';
-import { GlassFilter } from '../models/glass-filter.model';
+import { GlassListFilter } from '../models/glass-list-item.model';
 import { IngredientListItem } from '../models/ingredient-list-item.model';
 import { CocktailService } from '../services/cocktail.service';
 import { IngredientService } from '../services/ingredient.service';
+
+class CocktailSearchFilter {
+    searchString: string | null = '';
+    filterPrefix = '';
+    drinks: DrinkFilter[] = [];
+    options: string[] = [];
+}
+
+enum CocktailSearchFilterTypes {
+    Ingredient = 'Ingredient',
+    Glass = 'Glass',
+    Category = 'Category'
+}
 
 @Component({
     selector: 'cocktails-cocktail-search',
@@ -15,16 +28,33 @@ export class CocktailSearchComponent implements OnInit {
 
     // Data Properties
     drinks: Drink[] = [];
-    ingredients: IngredientListItem[] = [];
-    glasses: GlassFilter[] = [];
-    drinksByIngredient: DrinkFilter[] = [];
-    drinksByGlass: DrinkFilter[] = [];
 
-    // Local Properties
+    // Filter Properties
     name = '';
-    ingredientSearch = '';
-    glassSearch = '';
+    searchFilters: { [type: string]: CocktailSearchFilter } = {
+        [CocktailSearchFilterTypes.Ingredient]: {
+            searchString: '',
+            filterPrefix: 'i=',
+            drinks: [],
+            options: []
+        },
+        [CocktailSearchFilterTypes.Glass]: {
+            searchString: '',
+            filterPrefix: 'g=',
+            drinks: [],
+            options: []
+        },
+        [CocktailSearchFilterTypes.Category]: {
+            searchString: '',
+            filterPrefix: 'c=',
+            drinks: [],
+            options: []
+        }
+    };
+    searchFilterTypes = Object.keys(this.searchFilters);
     filteredDrinks: Drink[] = [];
+
+    // Other Properties
     fetchTimeout: any = null;   // I'm not a fan of the "any" type, but Angular makes using NodeJS.Timeout difficult
 
     // Constructor
@@ -36,11 +66,14 @@ export class CocktailSearchComponent implements OnInit {
     // Event Functions
     ngOnInit(): void {
         this.ingredientService.getIngredients().subscribe(ingredientList => {
-            this.ingredients = ingredientList.drinks;
+            this.searchFilters[CocktailSearchFilterTypes.Ingredient].options = ingredientList.drinks.map(drink => drink.strIngredient1);
         });
-        this.cocktailService.getGlasses().subscribe(glassFilters => {
-            this.glasses = glassFilters.drinks;
-        })
+        this.cocktailService.getGlasses().subscribe(glassList => {
+            this.searchFilters[CocktailSearchFilterTypes.Glass].options = glassList.drinks.map(drink => drink.strGlass);
+        });
+        this.cocktailService.getCategories().subscribe(categoryList => {
+            this.searchFilters[CocktailSearchFilterTypes.Category].options = categoryList.drinks.map(drink => drink.strCategory);
+        });
         this.fetchCocktails();
     }
 
@@ -56,28 +89,15 @@ export class CocktailSearchComponent implements OnInit {
         }, 1000);
     }
 
-    applyIngredientFilter() {
-        // PRE: the user changes the ingredient search
-        // POST: obtains that filter and applies it
-        if (this.ingredientSearch) {
-            this.cocktailService.getCocktailFilterByIngredient(this.ingredientSearch).subscribe(drinksContainer => {
-                this.drinksByIngredient = drinksContainer.drinks;
+    setFilterByType(type: string, newValue: string) {
+        this.searchFilters[type].searchString = newValue;
+        if (this.searchFilters[type].searchString) {
+            this.cocktailService.getCocktailsByFilter(this.searchFilters[type].filterPrefix + this.searchFilters[type].searchString).subscribe(drinksContainer => {
+                this.searchFilters[type].drinks = drinksContainer.drinks;
                 this.applyFilter();
             });
         } else {
-            this.drinksByIngredient = [];
-            this.applyFilter();
-        }
-    }
-
-    applyGlassFilter() {
-        if (this.glassSearch) {
-            this.cocktailService.getCocktailFilterByGlass(this.glassSearch).subscribe(drinksContainer => {
-                this.drinksByGlass = drinksContainer.drinks;
-                this.applyFilter();
-            });
-        } else {
-            this.drinksByGlass = [];
+            this.searchFilters[type].drinks = [];
             this.applyFilter();
         }
     }
@@ -98,26 +118,16 @@ export class CocktailSearchComponent implements OnInit {
     private applyFilter() {
         // POST: crosses the filter with the data
         this.filteredDrinks = this.drinks.filter(drink => {
-
-            // Checking the ingredient filter
-            if (
-                this.drinksByIngredient
-                && this.drinksByIngredient.length > 0
-                && !this.drinksByIngredient.find(drinkByIngredient => drinkByIngredient.idDrink == drink.idDrink)
-            ) {
-                return false;
+            for (let i = 0; i < this.searchFilterTypes.length; i++) {
+                const searchFilterType = this.searchFilterTypes[i];
+                if (
+                    this.searchFilters[searchFilterType].drinks
+                    && this.searchFilters[searchFilterType].drinks.length > 0
+                    && !this.searchFilters[searchFilterType].drinks.find(filterDrink => filterDrink.idDrink == drink.idDrink)
+                ) {
+                    return false;
+                }
             }
-
-            // Checking the glass filter
-            if (
-                this.drinksByGlass
-                && this.drinksByGlass.length > 0
-                && !this.drinksByGlass.find(drinkByGlass => drinkByGlass.idDrink == drink.idDrink)
-            ) {
-                return false;
-            }
-
-            // If we've passed all filters, then we can include the drink
             return true;
         });
     }
