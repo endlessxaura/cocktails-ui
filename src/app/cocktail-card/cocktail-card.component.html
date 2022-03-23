@@ -1,4 +1,4 @@
-<a *ngIf="navigable" routerLink="/cocktail-details/{{drink.idDrink}}" [attr.aria-label]="drink.strDrink">
+<a *ngIf="navigable && drink" routerLink="/cocktail-details/{{drink.idDrink}}" [attr.aria-label]="drink.strDrink">
     <ng-container *ngTemplateOutlet="cardTemplate"></ng-container>
 </a>
 <ng-container *ngIf="!navigable">
@@ -6,7 +6,7 @@
 </ng-container>
 
 <ng-template #cardTemplate>
-    <mat-card tabindex="0">
+    <mat-card tabindex="0" *ngIf="drink">
         <div class="grid">
             <img [src]="drink.strDrinkThumb" />
             <div>

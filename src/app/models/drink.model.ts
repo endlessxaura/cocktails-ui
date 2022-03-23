@@ -1,4 +1,6 @@
 export class Drink {
+
+    // Properties
     idDrink: string;
     strDrink: string;
     strDrinkAlternate?: any;
@@ -50,4 +52,13 @@ export class Drink {
     strImageAttribution?: string;
     strCreativeCommonsConfirmed: string;
     dateModified?: string;
+
+    // Constructor
+    constructor(id: string, name: string, category: string, alcoholic: string, glass: string) {
+        this.idDrink = id;
+        this.strDrink = name;
+        this.strCategory = category;
+        this.strAlcoholic = alcoholic;
+        this.strGlass = glass;
+    }
 }

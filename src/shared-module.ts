@@ -8,6 +8,9 @@ import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { RouterModule } from "@angular/router";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { RouterTestingModule } from "@angular/router/testing";
 
 const commonModules = [
     MatFormFieldModule,
@@ -18,7 +21,10 @@ const commonModules = [
     MatCardModule,
     CommonModule,
     MatIconModule,
-    MatSelectModule
+    MatSelectModule,
+    RouterModule,
+    RouterTestingModule,
+    BrowserAnimationsModule
 ];
 
 @NgModule({
