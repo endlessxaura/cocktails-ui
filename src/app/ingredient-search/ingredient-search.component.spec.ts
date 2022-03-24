@@ -31,7 +31,7 @@ describe('IngredientSearchComponent', () => {
     });
 
     beforeEach(() => {
-        route.queryParams = of({ name: 'Hello!' });
+        route.queryParams = of({ name: 'Hello!', drinkId: 'World' });
         fixture = TestBed.createComponent(IngredientSearchComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
