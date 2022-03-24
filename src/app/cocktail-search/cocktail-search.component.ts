@@ -12,7 +12,6 @@ import { CocktailSearchFilter, CocktailSearchFilterTypes } from './cocktail-sear
 export class CocktailSearchComponent implements OnInit, OnDestroy {
 
     // Properties
-    name: string;
     searchFilterTypes: string[] = [];
     drinks: DrinkFilter[] = [];
     drinkFilterSubscription: Subscription;
@@ -55,6 +54,9 @@ export class CocktailSearchComponent implements OnInit, OnDestroy {
             this.drinks = drinkFilters;
             this.applyFilter();
         });
+        if (this.cocktailService.drinkFilters.value.length == 0) {
+            this.cocktailService.getAllDrinkFilters();
+        }
     }
 
     ngOnDestroy(): void {
@@ -63,7 +65,7 @@ export class CocktailSearchComponent implements OnInit, OnDestroy {
 
     // UI Functions
     setFilterByName(newValue: string) {
-        this.name = newValue;
+        this.nameFilter = newValue;
         this.applyFilter();
     }
 
@@ -84,7 +86,7 @@ export class CocktailSearchComponent implements OnInit, OnDestroy {
     private applyFilter() {
         // POST: crosses the filter with the data
         this.filteredDrinks = this.drinks.filter(drink => {
-            if (this.name && !drink.strDrink.includes(this.name)) {
+            if (this.nameFilter && !drink.strDrink.includes(this.nameFilter)) {
                 return false;
             }
             for (let i = 0; i < this.searchFilterTypes.length; i++) {

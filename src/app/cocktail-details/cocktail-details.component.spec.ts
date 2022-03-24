@@ -1,12 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { SharedModule } from 'src/shared-module';
+import { SharedTestingModule } from 'src/shared-testing.module';
 import { CocktailCardModule } from '../cocktail-card/cocktail-card.module';
 import { CocktailService } from '../services/cocktail.service';
 import { getTestCocktailService } from '../services/cocktail.service.spec';
-import { IngredientService } from '../services/ingredient.service';
-import { getTestIngredientService } from '../services/ingredient.service.spec';
 import { CocktailDetailsRoutingModule } from './cocktail-details-routing.module';
 
 import { CocktailDetailsComponent } from './cocktail-details.component';
@@ -21,12 +20,12 @@ describe('CocktailDetailsComponent', () => {
             declarations: [CocktailDetailsComponent],
             imports: [
                 CocktailDetailsRoutingModule,
-                SharedModule,
-                CocktailCardModule
+                SharedTestingModule,
+                CocktailCardModule,
+                RouterTestingModule
             ],
             providers: [
-                { provide: CocktailService, useValue: getTestCocktailService() },
-                { provide: IngredientService, useValue: getTestIngredientService() }
+                { provide: CocktailService, useValue: getTestCocktailService() }
             ]
         })
             .compileComponents();

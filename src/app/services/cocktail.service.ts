@@ -51,9 +51,7 @@ export class CocktailService {
     // Constructor
     constructor(
         private httpClient: HttpClient
-    ) {
-        this.getAllDrinkFilters();
-    }
+    ) { }
 
     // Callable Methods
     setDistinctFilters(drinkFilters: DrinkFilters) {

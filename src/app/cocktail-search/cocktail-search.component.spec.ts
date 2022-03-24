@@ -1,11 +1,10 @@
 import { async, ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { SharedModule } from 'src/shared-module';
+import { RouterTestingModule } from '@angular/router/testing';
+import { SharedTestingModule } from 'src/shared-testing.module';
 import { CocktailCardModule } from '../cocktail-card/cocktail-card.module';
 import { CocktailService } from '../services/cocktail.service';
-import { getTestCocktailService } from '../services/cocktail.service.spec';
-import { IngredientService } from '../services/ingredient.service';
-import { getTestIngredientService } from '../services/ingredient.service.spec';
+import { getTestCocktailService, testDrinks } from '../services/cocktail.service.spec';
 import { CocktailSearchRoutingModule } from './cocktail-search-routing.module';
 
 import { CocktailSearchComponent } from './cocktail-search.component';
@@ -19,12 +18,12 @@ describe('CocktailSearchComponent', () => {
             declarations: [CocktailSearchComponent],
             imports: [
                 CocktailSearchRoutingModule,
-                SharedModule,
-                CocktailCardModule
+                SharedTestingModule,
+                CocktailCardModule,
+                RouterTestingModule
             ],
             providers: [
-                { provide: CocktailService, useValue: getTestCocktailService() },
-                { provide: IngredientService, useValue: getTestIngredientService() }
+                { provide: CocktailService, useValue: getTestCocktailService() }
             ]
         })
             .compileComponents();
@@ -34,13 +33,15 @@ describe('CocktailSearchComponent', () => {
         fixture = TestBed.createComponent(CocktailSearchComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+        component.drinks = testDrinks.drinks;
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should fetch new drinks on enter', waitForAsync(() => {
+    it('should filter drinks with name', waitForAsync(() => {
+        component.setFilterByName = jasmine.createSpy('setFilterByName', component.setFilterByName).and.callThrough();
         const nameField = fixture.debugElement.query(By.css('#nameField'));
         expect(nameField).toBeTruthy();
         if (nameField) {
@@ -48,12 +49,13 @@ describe('CocktailSearchComponent', () => {
             nameField.triggerEventHandler('keydown', {});
             fixture.detectChanges();
             fixture.whenStable().then(() => {
+                expect(component.setFilterByName).toHaveBeenCalled();
                 expect(component.filteredDrinks.length).toEqual(1);
             });
         }
     }));
 
-    it('should filter drinks', waitForAsync(() => {
+    it('should filter drinks with dropdowns', waitForAsync(() => {
         const setFilterByTypeSpy = spyOn(component, 'setFilterByType').and.callThrough();
         component.searchFilterTypes.forEach(filterType => {
             const searchField = fixture.debugElement.query(By.css('#searchField' + filterType));
@@ -67,7 +69,6 @@ describe('CocktailSearchComponent', () => {
                     fixture.detectChanges();
                     fixture.whenStable().then(() => {
                         expect(setFilterByTypeSpy).toHaveBeenCalledWith(filterType, searchFilter.options[0]);
-                        expect(searchFilter.drinks.length).toEqual(1);
                         expect(component.filteredDrinks.length).toEqual(1);
                     });
                 }
@@ -75,7 +76,7 @@ describe('CocktailSearchComponent', () => {
         });
     }));
 
-    it('should allow blank filters', waitForAsync(() => {
+    it('should allow blank dropdown filters', waitForAsync(() => {
         const setFilterByTypeSpy = spyOn(component, 'setFilterByType').and.callThrough();
         component.searchFilterTypes.forEach(filterType => {
             const searchField = fixture.debugElement.query(By.css('#searchField' + filterType));
@@ -86,7 +87,6 @@ describe('CocktailSearchComponent', () => {
             fixture.detectChanges();
             fixture.whenStable().then(() => {
                 expect(setFilterByTypeSpy).toHaveBeenCalledWith(filterType, '');
-                expect(searchFilter.drinks.length).toEqual(0);
                 expect(component.filteredDrinks.length).toEqual(2);
             });
         });

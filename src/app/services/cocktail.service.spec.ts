@@ -1,11 +1,12 @@
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { TestBed, waitForAsync } from "@angular/core/testing";
-import { Observable, of } from "rxjs";
+import { BehaviorSubject, Observable, of } from "rxjs";
 import { CocktailSearchFilterTypes } from "../cocktail-search/cocktail-search-filter.model";
 import { AlcoholicListItem } from "../models/alcoholic-list-item.model";
 import { AlcoholicList } from "../models/alcoholic-list.model";
 import { CategoryListItem } from "../models/category-list-item.model";
 import { CategoryList } from "../models/category-list.model";
+import { DrinkFilter } from "../models/drink-filter.model";
 import { DrinkFilters } from "../models/drink-filters.model";
 import { Drink } from "../models/drink.model";
 import { Drinks } from "../models/drinks.model";
@@ -183,8 +184,47 @@ describe('CocktailService', () => {
             }
         )
     });
+
+    it('should get distinct filters', waitForAsync(() => {
+        const testingCocktailService = getTestCocktailService();
+        service.getCategories = testingCocktailService.getCategories;
+        service.getIngredients = testingCocktailService.getIngredients;
+        service.getGlasses = testingCocktailService.getGlasses;
+        service.getAlcoholicOptions = testingCocktailService.getAlcoholicOptions;
+        service.getCocktailsByFilter = testingCocktailService.getCocktailsByFilter;
+        service.getAllDrinkFilters();
+        expect(service.getCategories).toHaveBeenCalled();
+        expect(service.getIngredients).toHaveBeenCalled();
+        expect(service.getGlasses).toHaveBeenCalled();
+        expect(service.getAlcoholicOptions).toHaveBeenCalled();
+        expect(service.getCocktailsByFilter).toHaveBeenCalled();
+    }));
 });
 
+export const testDrinks: Drinks = {
+    drinks: [
+        new Drink({
+            id: 'drink A',
+            name: 'Drink of A',
+            category: 'category A',
+            alcoholic: 'alcoholic',
+            glass: 'glass A',
+            ingredients: ['ingredient A'],
+            measures: ['1/2'],
+            tags: 'Test,Tag'
+        }),
+        new Drink({
+            id: 'drink B',
+            name: 'Drink of B',
+            category: 'category B',
+            alcoholic: 'non-alcoholic',
+            glass: 'glass B',
+            ingredients: ['ingredient B'],
+            measures: ['1/2'],
+            tags: 'Woo,Hoo'
+        })
+    ]
+};
 
 export const getTestCocktailService = () => {
     const testCocktailService = jasmine.createSpyObj(
@@ -197,10 +237,11 @@ export const getTestCocktailService = () => {
             'getCategories',
             'getAlcoholicOptions',
             'getIngredients',
-            'getIngredientByName'
+            'getIngredientByName',
+            'getAllDrinkFilters'
         ],
         {
-            nameFilter: '',
+            drinkFilters: new BehaviorSubject([] as DrinkFilter[]),
             searchFilters: {
                 [CocktailSearchFilterTypes.Ingredient]: {
                     searchString: '',
@@ -230,52 +271,18 @@ export const getTestCocktailService = () => {
         }
     );
     testCocktailService.getCocktailsByName.and.returnValue(
-        of<Drinks>({
-            drinks: [
-                new Drink({
-                    id: 'drink A',
-                    name: 'Drink of A',
-                    category: 'category A',
-                    alcoholic: 'alcoholic',
-                    glass: 'glass A',
-                    ingredients: ['ingredient A'],
-                    measures: ['1/2'],
-                    tags: 'Test,Tag'
-                }),
-                new Drink({
-                    id: 'drink B',
-                    name: 'Drink of B',
-                    category: 'category B',
-                    alcoholic: 'non-alcoholic',
-                    glass: 'glass B',
-                    ingredients: ['ingredient B'],
-                    measures: ['1/2'],
-                    tags: 'Woo,Hoo'
-                })
-            ]
-        })
+        of<Drinks>(testDrinks)
     );
     testCocktailService.getCocktailById.and.returnValue(
-        of<Drink>(
-            new Drink({
-                id: 'drink A',
-                name: 'Drink of A',
-                category: 'category A',
-                alcoholic: 'alcoholic',
-                glass: 'glass A',
-                ingredients: ['ingredient A'],
-                measures: ['1/2'],
-                tags: 'Test,Tag'
-            })
-        )
+        of<Drink>(testDrinks.drinks[0])
     );
     testCocktailService.getCocktailsByFilter.and.returnValue(
         of<DrinkFilters>({
             drinks: [
                 {
-                    strDrink: 'Drink of A',
+                    strDrink: testDrinks.drinks[0].strDrink,
                     strDrinkThumb: 'Eh',
-                    idDrink: 'drink A'
+                    idDrink: testDrinks.drinks[0].idDrink
                 }
             ]
         })
