@@ -1,5 +1,5 @@
 # CocktailsUI
-CocktailsUI is a website built around the cocktails API: https://www.thecocktaildb.com/api.php. It was built with Angular 13.3.0.
+CocktailsUI a website built on Angular 13.3.0. It is available at https://cocktails-ui.herokuapp.com/. It is a website built around the cocktails API: https://www.thecocktaildb.com/api.php. 
 
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
