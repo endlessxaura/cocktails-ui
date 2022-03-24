@@ -1,9 +1,9 @@
-<div>
+<div *ngIf="drink">
     <button mat-raised-button routerLink="/cocktail-search">
         <mat-icon>arrow_back</mat-icon>
         Back
     </button>
-    <div *ngIf="drink" class="main-info">
+    <div class="main-info">
         <cocktails-cocktail-card [drink]="drink" [navigable]="false"></cocktails-cocktail-card>
         <div>
             <table>
@@ -32,7 +32,7 @@
                     <span>{{drinkIngredient.measure}} of&nbsp;</span>
                 </ng-container>
                 <a *ngIf="drinkIngredient.includeLink" routerLink="/ingredient-search"
-                    [queryParams]="{name: drinkIngredient.ingredient}">{{drinkIngredient.ingredient}}</a>
+                    [queryParams]="{name: drinkIngredient.ingredient, drinkId: drink.idDrink}">{{drinkIngredient.ingredient}}</a>
                 <span *ngIf="!drinkIngredient.includeLink">{{drinkIngredient.ingredient}}</span>
             </ng-container>
         </li>

@@ -8,6 +8,10 @@
         </mat-select>
     </mat-form-field>
 </div>
+<button *ngIf="drinkId" mat-raised-button routerLink="/cocktail-details/{{drinkId}}">
+    <mat-icon>arrow_back</mat-icon>
+    Back
+</button>
 <div *ngIf="ingredient" class="ingredient-detail">
     <table>
         <tr>

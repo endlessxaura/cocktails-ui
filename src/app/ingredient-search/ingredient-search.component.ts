@@ -16,6 +16,7 @@ export class IngredientSearchComponent implements OnInit {
     ingredients: string[] = [];
     ingredientSelection = '';
     ingredient: Ingredient | null;
+    drinkId = false;
 
     // Constructor
     constructor(
@@ -32,9 +33,13 @@ export class IngredientSearchComponent implements OnInit {
             if (queryParams['name']) {
                 this.setIngredient(queryParams['name']);
             }
+            if (queryParams['drinkId']) {
+                this.drinkId = queryParams['drinkId'];
+            }
         });
     }
 
+    // Helper Functions
     setIngredient(newValue: string) {
         this.ingredientSelection = newValue;
         this.cocktailService.getIngredientByName(this.ingredientSelection).subscribe(ingredient => {
