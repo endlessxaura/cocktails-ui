@@ -102,6 +102,7 @@ export const getTestCocktailService = () => {
         'CocktailService',
         [
             'getCocktailsByName',
+            'getCocktailById',
             'getCocktailsByFilter',
             'getGlasses',
             'getCategories',
@@ -140,10 +141,42 @@ export const getTestCocktailService = () => {
     testCocktailService.getCocktailsByName.and.returnValue(
         of<Drinks>({
             drinks: [
-                new Drink('drink A', 'Drink of A', 'category A', 'alcoholic', 'glass A', ['ingredient A'], ['1/2']),
-                new Drink('drink B', 'Drink of B', 'category B', 'non-alcoholic', 'glass B', ['ingredient B'], ['1/2'])
+                new Drink({
+                    id: 'drink A',
+                    name: 'Drink of A',
+                    category: 'category A',
+                    alcoholic: 'alcoholic',
+                    glass: 'glass A',
+                    ingredients: ['ingredient A'],
+                    measures: ['1/2'],
+                    tags: 'Test,Tag'
+                }),
+                new Drink({
+                    id: 'drink B',
+                    name: 'Drink of B',
+                    category: 'category B',
+                    alcoholic: 'non-alcoholic',
+                    glass: 'glass B',
+                    ingredients: ['ingredient B'],
+                    measures: ['1/2'],
+                    tags: 'Woo,Hoo'
+                })
             ]
         })
+    );
+    testCocktailService.getCocktailById.and.returnValue(
+        of<Drink>(
+            new Drink({
+                id: 'drink A',
+                name: 'Drink of A',
+                category: 'category A',
+                alcoholic: 'alcoholic',
+                glass: 'glass A',
+                ingredients: ['ingredient A'],
+                measures: ['1/2'],
+                tags: 'Test,Tag'
+            })
+        )
     );
     testCocktailService.getCocktailsByFilter.and.returnValue(
         of<DrinkFilters>({

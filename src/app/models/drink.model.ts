@@ -54,25 +54,31 @@ export class Drink {
     dateModified?: string;
 
     // Constructor
-    constructor(
-        id: string,
-        name: string,
-        category: string,
-        alcoholic: string,
-        glass: string,
-        ingredients: string[],
-        measures: string[]
-    ) {
-        this.idDrink = id;
-        this.strDrink = name;
-        this.strCategory = category;
-        this.strAlcoholic = alcoholic;
-        this.strGlass = glass;
-        for (let i = 1; i <= ingredients.length; i++) {
-            this[('strIngredient' + i) as keyof Drink] = ingredients[i - 1]
+    constructor(params: {
+        id?: string,
+        name?: string,
+        category?: string,
+        alcoholic?: string,
+        glass?: string,
+        ingredients?: string[],
+        measures?: string[],
+        tags?: string
+    } = {}) {
+        this.idDrink = params.id ?? '';
+        this.strDrink = params.name ?? '';
+        this.strCategory = params.category ?? '';
+        this.strAlcoholic = params.alcoholic ?? '';
+        this.strGlass = params.glass ?? '';
+        if (params.ingredients) {
+            for (let i = 1; i <= params.ingredients.length; i++) {
+                this[('strIngredient' + i) as keyof Drink] = params.ingredients[i - 1]
+            }
         }
-        for (let i = 1; i <= measures.length; i++) {
-            this[('strMeasure' + i) as keyof Drink] = measures[i - 1];
+        if (params.measures) {
+            for (let i = 1; i <= params.measures.length; i++) {
+                this[('strMeasure' + i) as keyof Drink] = params.measures[i - 1];
+            }
         }
+        this.strTags = params.tags ?? '';
     }
 }
