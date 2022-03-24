@@ -2,10 +2,12 @@
 
 <!-- Navigation Buttons -->
 <div style="display: flex">
-    <button mat-raised-button [color]="url == '/cocktail-search' ? 'primary' : ''" (click)="searchCocktailsClick()">
+    <button mat-raised-button [color]="url.includes('/cocktail-search') ? 'primary' : ''"
+        (click)="searchCocktailsClick()">
         Search Cocktails
     </button>
-    <button mat-raised-button [color]="url == '/ingredient-search' ? 'primary' : ''" (click)="searchIngredientsClick()">
+    <button mat-raised-button [color]="url.includes('/ingredient-search') ? 'primary' : ''"
+        (click)="searchIngredientsClick()">
         Search Ingredients
     </button>
 </div>
