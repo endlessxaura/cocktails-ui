@@ -86,7 +86,7 @@ export class CocktailSearchComponent implements OnInit, OnDestroy {
     private applyFilter() {
         // POST: crosses the filter with the data
         this.filteredDrinks = this.drinks.filter(drink => {
-            if (this.nameFilter && !drink.strDrink.includes(this.nameFilter)) {
+            if (this.nameFilter && !drink.strDrink.toLowerCase().includes(this.nameFilter.toLowerCase())) {
                 return false;
             }
             for (let i = 0; i < this.searchFilterTypes.length; i++) {
