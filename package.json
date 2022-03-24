@@ -1,17 +1,13 @@
 {
-    "engines": {
-        "node": "x.x.x",
-        "npm": "x.x.x"
-    },
     "name": "cocktails-ui",
     "version": "0.0.0",
     "scripts": {
         "ng": "ng",
-        "build": "ng build",
+        "start": "node server.js",
+        "build": "ng build --prod",
         "watch": "ng build --watch --configuration development",
         "test": "ng test",
-        "heroku-postbuild": "ng build — prod",
-        "start": "node server.js"
+        "heroku-postbuild": "ng build --prod"
     },
     "private": true,
     "dependencies": {
@@ -48,5 +44,9 @@
         "karma-coverage": "~2.1.0",
         "karma-jasmine": "~4.0.0",
         "karma-jasmine-html-reporter": "~1.7.0"
+    },
+    "engines": {
+        "node": "^16.0.0",
+        "npm": "^7.0.0"
     }
 }
