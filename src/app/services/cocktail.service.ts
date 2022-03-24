@@ -140,38 +140,56 @@ export const getTestCocktailService = () => {
     testCocktailService.getCocktailsByName.and.returnValue(
         of<Drinks>({
             drinks: [
-                new Drink('foo', 'fooey', 'category A', 'alcoholic', 'glass A')
+                new Drink('drink A', 'Drink of A', 'category A', 'alcoholic', 'glass A', ['ingredient A'], ['1/2']),
+                new Drink('drink B', 'Drink of B', 'category B', 'non-alcoholic', 'glass B', ['ingredient B'], ['1/2'])
             ]
         })
     );
     testCocktailService.getCocktailsByFilter.and.returnValue(
         of<DrinkFilters>({
-            drinks: [{
-                strDrink: 'foo',
-                strDrinkThumb: 'Eh',
-                idDrink: 'foo'
-            }]
+            drinks: [
+                {
+                    strDrink: 'Drink of A',
+                    strDrinkThumb: 'Eh',
+                    idDrink: 'drink A'
+                }
+            ]
         })
     );
     testCocktailService.getGlasses.and.returnValue(
         of<GlassList>({
-            drinks: [{
-                strGlass: 'glass A'
-            }]
+            drinks: [
+                {
+                    strGlass: 'glass A'
+                },
+                {
+                    strGlass: 'glass B'
+                }
+            ]
         })
     );
     testCocktailService.getCategories.and.returnValue(
         of<CategoryList>({
-            drinks: [{
-                strCategory: 'category A'
-            }]
+            drinks: [
+                {
+                    strCategory: 'category A'
+                },
+                {
+                    strCategory: 'category B'
+                }
+            ]
         })
     );
     testCocktailService.getAlcoholicOptions.and.returnValue(
         of<AlcoholicList>({
-            drinks: [{
-                strAlcoholic: 'alcoholic'
-            }]
+            drinks: [
+                {
+                    strAlcoholic: 'alcoholic'
+                },
+                {
+                    strAlcoholic: 'non-alcoholic'
+                }
+            ]
         })
     );
     return testCocktailService;

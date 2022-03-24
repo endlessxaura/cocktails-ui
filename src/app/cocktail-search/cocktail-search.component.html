@@ -1,12 +1,13 @@
 <div class="search-row">
     <mat-form-field>
         <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="nameFilter" (keydown)="queueRefetch()" (keyup.enter)="fetchCocktails()">
+        <input id="nameField" matInput [(ngModel)]="nameFilter" (keydown)="queueRefetch()"
+            (keyup.enter)="fetchCocktails()">
     </mat-form-field>
     <ng-container *ngFor="let searchFilterType of searchFilterTypes">
         <mat-form-field>
             <mat-label>{{searchFilterType}}</mat-label>
-            <mat-select [ngModel]="searchFilters[searchFilterType].searchString"
+            <mat-select id="searchField{{searchFilterType}}" [ngModel]="searchFilters[searchFilterType].searchString"
                 (ngModelChange)="setFilterByType(searchFilterType, $event)">
                 <mat-option [value]="null"></mat-option>
                 <mat-option *ngFor="let ingredient of searchFilters[searchFilterType].options" [value]="ingredient">

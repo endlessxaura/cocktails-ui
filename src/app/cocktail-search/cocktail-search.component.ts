@@ -42,10 +42,6 @@ export class CocktailSearchComponent implements OnInit {
         return this.cocktailService.searchFilters;
     }
 
-    set searchFilters(value: { [type: string]: CocktailSearchFilter }) {
-        this.cocktailService.searchFilters = value;
-    }
-
     // Event Functions
     ngOnInit(): void {
         this.searchFilterTypes = Object.keys(this.searchFilters);

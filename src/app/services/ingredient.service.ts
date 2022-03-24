@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { map, Observable, take } from "rxjs";
+import { map, Observable, of, take } from "rxjs";
 import { Ingredient } from "../models/ingredient.model";
 import { Ingredients } from "../models/ingredients.model";
 import { IngredientList } from "../models/integredient-list.model";
@@ -30,4 +30,50 @@ export class IngredientService {
             )
         )
     }
+}
+
+export const getTestIngredientService = () => {
+    const testIngredientService = jasmine.createSpyObj(
+        'IngredientService',
+        [
+            'getIngredients',
+            'getIngredientByName'
+        ],
+        []
+    );
+    testIngredientService.getIngredients.and.returnValue(
+        of<IngredientList>({
+            drinks: [
+                {
+                    strIngredient1: 'Ingredient A'
+                },
+                {
+                    strIngredient1: 'Ingredient B'
+                }
+            ]
+        })
+    );
+    testIngredientService.getIngredientByName.and.returnValue(
+        of<Ingredients>({
+            ingredients: [
+                {
+                    idIngredient: 'Ingredient A',
+                    strIngredient: 'A',
+                    strDescription: 'description here',
+                    strType: 'alcohol?',
+                    strAlcohol: 'yes?',
+                    strABV: 'sure?'
+                },
+                {
+                    idIngredient: 'Ingredient B',
+                    strIngredient: 'B',
+                    strDescription: 'description here',
+                    strType: 'non-alcohol?',
+                    strAlcohol: 'no?',
+                    strABV: 'maybe not?'
+                }
+            ]
+        })
+    )
+    return testIngredientService;
 }
