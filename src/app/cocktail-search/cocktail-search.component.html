@@ -1,8 +1,7 @@
 <div class="search-row">
     <mat-form-field>
         <mat-label>Name</mat-label>
-        <input id="nameField" matInput [(ngModel)]="nameFilter" (keydown)="queueRefetch()"
-            (keyup.enter)="fetchCocktails()">
+        <input id="nameField" matInput [ngModel]="nameFilter" (ngModelChange)="setFilterByName($event)">
     </mat-form-field>
     <ng-container *ngFor="let searchFilterType of searchFilterTypes">
         <mat-form-field>
@@ -16,7 +15,6 @@
             </mat-select>
         </mat-form-field>
     </ng-container>
-    <button mat-raised-button (click)="fetchCocktails()">Search</button>
 </div>
 <div class="cocktails-display">
     <div *ngFor="let drink of filteredDrinks">

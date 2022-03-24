@@ -2,19 +2,6 @@ img {
     max-width: 15vw;
 }
 
-.grid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.grid > div {
-    margin-left: 5px;
-    margin-bottom: 10px;
-    display: flex;
-    flex-direction: column;
-}
-
 a {
     text-decoration: none;
 }
@@ -27,3 +14,9 @@ a > mat-card:hover {
     background: lightgrey;
 }
 
+mat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

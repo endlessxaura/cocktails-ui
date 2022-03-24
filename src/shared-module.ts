@@ -22,9 +22,7 @@ const commonModules = [
     CommonModule,
     MatIconModule,
     MatSelectModule,
-    RouterModule,
-    RouterTestingModule,
-    BrowserAnimationsModule
+    RouterModule
 ];
 
 @NgModule({

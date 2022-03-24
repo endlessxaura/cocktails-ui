@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { SharedModule } from "src/shared-module";
-import { IngredientService } from "../services/ingredient.service";
+import { CocktailService } from "../services/cocktail.service";
 import { IngredientSearchRoutingModule } from "./ingredient-search-routing.module";
 import { IngredientSearchComponent } from "./ingredient-search.component";
 
@@ -10,6 +10,6 @@ import { IngredientSearchComponent } from "./ingredient-search.component";
         IngredientSearchRoutingModule,
         SharedModule
     ],
-    providers: [IngredientService]
+    providers: [CocktailService]
 })
 export class IngredientSearchModule { }

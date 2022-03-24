@@ -2,8 +2,10 @@ import { async, ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from 
 import { By } from '@angular/platform-browser';
 import { SharedModule } from 'src/shared-module';
 import { CocktailCardModule } from '../cocktail-card/cocktail-card.module';
-import { CocktailService, getTestCocktailService } from '../services/cocktail.service';
-import { getTestIngredientService, IngredientService } from '../services/ingredient.service';
+import { CocktailService } from '../services/cocktail.service';
+import { getTestCocktailService } from '../services/cocktail.service.spec';
+import { IngredientService } from '../services/ingredient.service';
+import { getTestIngredientService } from '../services/ingredient.service.spec';
 import { CocktailSearchRoutingModule } from './cocktail-search-routing.module';
 
 import { CocktailSearchComponent } from './cocktail-search.component';
@@ -42,37 +44,11 @@ describe('CocktailSearchComponent', () => {
         const nameField = fixture.debugElement.query(By.css('#nameField'));
         expect(nameField).toBeTruthy();
         if (nameField) {
-            component.queueRefetch = jasmine.createSpy('queueRefetch', component.queueRefetch).and.callThrough();
-            component.fetchCocktails = jasmine.createSpy('fetchCocktails', component.fetchCocktails).and.callThrough();
-            nameField.triggerEventHandler('ngModelChange', 'search');
-            nameField.triggerEventHandler('keydown', {});
-            fixture.detectChanges();
-            nameField.triggerEventHandler('ngModelChange', 'search');
+            nameField.triggerEventHandler('ngModelChange', 'A');
             nameField.triggerEventHandler('keydown', {});
             fixture.detectChanges();
             fixture.whenStable().then(() => {
-                expect(component.queueRefetch).toHaveBeenCalledTimes(2);
-                nameField.triggerEventHandler('keyup.enter', {});
-                fixture.detectChanges();
-                fixture.whenStable().then(() => {
-                    expect(component.fetchCocktails).toHaveBeenCalled();
-                });
-            });
-        }
-    }));
-
-    it('should fetch new drinks on waiting', waitForAsync(() => {
-        const nameField = fixture.debugElement.query(By.css('#nameField'));
-        expect(nameField).toBeTruthy();
-        if (nameField) {
-            component.fetchCocktails = jasmine.createSpy('fetchCocktails', component.fetchCocktails);
-            nameField.triggerEventHandler('ngModelChange', 'search');
-            nameField.triggerEventHandler('keydown', {});
-            fixture.detectChanges();
-            fixture.whenStable().then(() => {
-                setTimeout(() => {
-                    expect(component.fetchCocktails).toHaveBeenCalled();
-                }, 3000)
+                expect(component.filteredDrinks.length).toEqual(1);
             });
         }
     }));

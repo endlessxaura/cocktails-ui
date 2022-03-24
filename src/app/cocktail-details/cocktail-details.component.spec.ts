@@ -3,8 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { SharedModule } from 'src/shared-module';
 import { CocktailCardModule } from '../cocktail-card/cocktail-card.module';
-import { CocktailService, getTestCocktailService } from '../services/cocktail.service';
-import { getTestIngredientService, IngredientService } from '../services/ingredient.service';
+import { CocktailService } from '../services/cocktail.service';
+import { getTestCocktailService } from '../services/cocktail.service.spec';
+import { IngredientService } from '../services/ingredient.service';
+import { getTestIngredientService } from '../services/ingredient.service.spec';
 import { CocktailDetailsRoutingModule } from './cocktail-details-routing.module';
 
 import { CocktailDetailsComponent } from './cocktail-details.component';

@@ -11,19 +11,19 @@
 <div *ngIf="ingredient" class="ingredient-detail">
     <table>
         <tr>
-            <td>Type</td>
+            <td><b>Type</b></td>
             <td>{{ingredient.strType}}</td>
         </tr>
         <tr>
-            <td>Alcoholic</td>
+            <td><b>Alcoholic</b></td>
             <td>{{ingredient.strAlcohol}}</td>
         </tr>
         <tr>
-            <td>ABV</td>
+            <td><b>ABV</b></td>
             <td>{{ingredient.strABV}}</td>
         </tr>
         <tr>
-            <td>Description</td>
+            <td><b>Description</b></td>
             <td [innerHtml]="ingredient.strDescription"></td>
         </tr>
     </table>

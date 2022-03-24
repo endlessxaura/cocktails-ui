@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { SharedModule } from 'src/shared-module';
-import { getTestIngredientService, IngredientService } from '../services/ingredient.service';
+import { IngredientService } from '../services/ingredient.service';
+import { getTestIngredientService } from '../services/ingredient.service.spec';
 import { IngredientSearchRoutingModule } from './ingredient-search-routing.module';
 
 import { IngredientSearchComponent } from './ingredient-search.component';

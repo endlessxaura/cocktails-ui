@@ -4,7 +4,6 @@ import { forkJoin, take } from 'rxjs';
 import { DrinkIngredient } from '../models/drink-ingredient.model';
 import { Drink } from '../models/drink.model';
 import { CocktailService } from '../services/cocktail.service';
-import { IngredientService } from '../services/ingredient.service';
 
 @Component({
     selector: 'cocktails-cocktail-details',
@@ -21,8 +20,7 @@ export class CocktailDetailsComponent implements OnInit {
     // Constructor
     constructor(
         private route: ActivatedRoute,
-        private cocktailService: CocktailService,
-        private ingredientService: IngredientService
+        private cocktailService: CocktailService
     ) { }
 
     // Event Functions
@@ -31,7 +29,7 @@ export class CocktailDetailsComponent implements OnInit {
             if (params['id']) {
                 forkJoin(
                     this.cocktailService.getCocktailById(params['id']),
-                    this.ingredientService.getIngredients()
+                    this.cocktailService.getIngredients()
                 ).subscribe(results => {
                     this.drink = results[0];
                     const ingredients = results[1].drinks.map(drink => drink.strIngredient1);

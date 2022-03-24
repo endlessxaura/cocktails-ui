@@ -1,13 +1,17 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { map, Observable, of, take } from "rxjs";
+import { BehaviorSubject, map, Observable, of, take } from "rxjs";
 import { CocktailSearchFilter, CocktailSearchFilterTypes } from "../cocktail-search/cocktail-search-filter.model";
 import { AlcoholicList } from "../models/alcoholic-list.model";
 import { CategoryList } from "../models/category-list.model";
+import { DrinkFilter } from "../models/drink-filter.model";
 import { DrinkFilters } from "../models/drink-filters.model";
 import { Drink } from "../models/drink.model";
 import { Drinks } from "../models/drinks.model";
 import { GlassList } from "../models/glass-list.model";
+import { Ingredient } from "../models/ingredient.model";
+import { Ingredients } from "../models/ingredients.model";
+import { IngredientList } from "../models/integredient-list.model";
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +19,7 @@ import { GlassList } from "../models/glass-list.model";
 export class CocktailService {
 
     // State Properties
+    drinkFilters: BehaviorSubject<DrinkFilter[]> = new BehaviorSubject([] as DrinkFilter[]);
     nameFilter = '';
     searchFilters: { [type: string]: CocktailSearchFilter } = {
         [CocktailSearchFilterTypes.Ingredient]: {
@@ -46,7 +51,60 @@ export class CocktailService {
     // Constructor
     constructor(
         private httpClient: HttpClient
-    ) { }
+    ) {
+        this.getAllDrinkFilters();
+    }
+
+    // Callable Methods
+    setDistinctFilters(drinkFilters: DrinkFilters) {
+        const allValues = this.drinkFilters.value.concat(drinkFilters.drinks);
+        const distinctValues = allValues.filter((value: DrinkFilter, index: number, arr: DrinkFilter[]) => {
+            const firstIndex = arr.findIndex(arrValue => arrValue.idDrink == value.idDrink);
+            return firstIndex == index;
+        });
+        distinctValues.sort((a, b) => a.strDrink.localeCompare(b.strDrink));
+        this.drinkFilters.next(distinctValues);
+    }
+
+    getAllDrinkFilters() {
+        this.drinkFilters.next([]);
+
+        // Setting by categories
+        this.getCategories().subscribe(categories => {
+            categories.drinks.forEach(category => {
+                this.getCocktailsByFilter('c=' + category.strCategory).subscribe(drinkFilters => {
+                    this.setDistinctFilters(drinkFilters)
+                })
+            });
+        });
+
+        // Setting by glasses
+        this.getGlasses().subscribe(glasses => {
+            glasses.drinks.forEach(glass => {
+                this.getCocktailsByFilter('g=' + glass.strGlass).subscribe(drinkFilters => {
+                    this.setDistinctFilters(drinkFilters)
+                })
+            })
+        });
+
+        // Setting by alcoholic options
+        this.getAlcoholicOptions().subscribe(alcoholicOptions => {
+            alcoholicOptions.drinks.forEach(alcoholicOption => {
+                this.getCocktailsByFilter('a=' + alcoholicOption.strAlcoholic).subscribe(drinkFilters => {
+                    this.setDistinctFilters(drinkFilters)
+                })
+            });
+        });
+
+        // Setting by ingredients
+        this.getIngredients().subscribe(ingredients => {
+            ingredients.drinks.forEach(ingredient => {
+                this.getCocktailsByFilter('i=' + ingredient.strIngredient1).subscribe(drinkFilters => {
+                    this.setDistinctFilters(drinkFilters)
+                });
+            });
+        });
+    }
 
     // Http Methods
     getCocktailById(id: string): Observable<Drink | null> {
@@ -95,135 +153,23 @@ export class CocktailService {
             })
         );
     }
-}
 
-export const getTestCocktailService = () => {
-    const testCocktailService = jasmine.createSpyObj(
-        'CocktailService',
-        [
-            'getCocktailsByName',
-            'getCocktailById',
-            'getCocktailsByFilter',
-            'getGlasses',
-            'getCategories',
-            'getAlcoholicOptions'
-        ],
-        {
-            nameFilter: '',
-            searchFilters: {
-                [CocktailSearchFilterTypes.Ingredient]: {
-                    searchString: '',
-                    filterPrefix: 'i=',
-                    drinks: [],
-                    options: []
-                },
-                [CocktailSearchFilterTypes.Glass]: {
-                    searchString: '',
-                    filterPrefix: 'g=',
-                    drinks: [],
-                    options: []
-                },
-                [CocktailSearchFilterTypes.Category]: {
-                    searchString: '',
-                    filterPrefix: 'c=',
-                    drinks: [],
-                    options: []
-                },
-                [CocktailSearchFilterTypes.Alcholic]: {
-                    searchString: '',
-                    filterPrefix: 'a=',
-                    drinks: [],
-                    options: []
-                }
-            }
-        }
-    );
-    testCocktailService.getCocktailsByName.and.returnValue(
-        of<Drinks>({
-            drinks: [
-                new Drink({
-                    id: 'drink A',
-                    name: 'Drink of A',
-                    category: 'category A',
-                    alcoholic: 'alcoholic',
-                    glass: 'glass A',
-                    ingredients: ['ingredient A'],
-                    measures: ['1/2'],
-                    tags: 'Test,Tag'
-                }),
-                new Drink({
-                    id: 'drink B',
-                    name: 'Drink of B',
-                    category: 'category B',
-                    alcoholic: 'non-alcoholic',
-                    glass: 'glass B',
-                    ingredients: ['ingredient B'],
-                    measures: ['1/2'],
-                    tags: 'Woo,Hoo'
-                })
-            ]
-        })
-    );
-    testCocktailService.getCocktailById.and.returnValue(
-        of<Drink>(
-            new Drink({
-                id: 'drink A',
-                name: 'Drink of A',
-                category: 'category A',
-                alcoholic: 'alcoholic',
-                glass: 'glass A',
-                ingredients: ['ingredient A'],
-                measures: ['1/2'],
-                tags: 'Test,Tag'
+    getIngredients(): Observable<IngredientList> {
+        return this.httpClient.get<IngredientList>('https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list').pipe(
+            take(1),
+            map(ingredientList => {
+                ingredientList.drinks.sort((a, b) => a.strIngredient1.localeCompare(b.strIngredient1));
+                return ingredientList;
             })
+        );
+    }
+
+    getIngredientByName(name: string): Observable<Ingredient | null> {
+        return this.httpClient.get<Ingredients>('https://www.thecocktaildb.com/api/json/v1/1/search.php?i=' + name).pipe(
+            take(1),
+            map((ingredientsContainer: Ingredients) =>
+                ingredientsContainer.ingredients && ingredientsContainer.ingredients.length > 0 ? ingredientsContainer.ingredients[0] : null
+            )
         )
-    );
-    testCocktailService.getCocktailsByFilter.and.returnValue(
-        of<DrinkFilters>({
-            drinks: [
-                {
-                    strDrink: 'Drink of A',
-                    strDrinkThumb: 'Eh',
-                    idDrink: 'drink A'
-                }
-            ]
-        })
-    );
-    testCocktailService.getGlasses.and.returnValue(
-        of<GlassList>({
-            drinks: [
-                {
-                    strGlass: 'glass A'
-                },
-                {
-                    strGlass: 'glass B'
-                }
-            ]
-        })
-    );
-    testCocktailService.getCategories.and.returnValue(
-        of<CategoryList>({
-            drinks: [
-                {
-                    strCategory: 'category A'
-                },
-                {
-                    strCategory: 'category B'
-                }
-            ]
-        })
-    );
-    testCocktailService.getAlcoholicOptions.and.returnValue(
-        of<AlcoholicList>({
-            drinks: [
-                {
-                    strAlcoholic: 'alcoholic'
-                },
-                {
-                    strAlcoholic: 'non-alcoholic'
-                }
-            ]
-        })
-    );
-    return testCocktailService;
+    }
 }

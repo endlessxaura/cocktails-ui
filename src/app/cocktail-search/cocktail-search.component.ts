@@ -1,10 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { DrinkFilter } from '../models/drink-filter.model';
-import { Drink } from '../models/drink.model';
-import { GlassListFilter } from '../models/glass-list-item.model';
-import { IngredientListItem } from '../models/ingredient-list-item.model';
 import { CocktailService } from '../services/cocktail.service';
-import { IngredientService } from '../services/ingredient.service';
 import { CocktailSearchFilter, CocktailSearchFilterTypes } from './cocktail-search-filter.model';
 
 @Component({
@@ -12,22 +9,19 @@ import { CocktailSearchFilter, CocktailSearchFilterTypes } from './cocktail-sear
     templateUrl: './cocktail-search.component.html',
     styleUrls: ['./cocktail-search.component.scss']
 })
-export class CocktailSearchComponent implements OnInit {
+export class CocktailSearchComponent implements OnInit, OnDestroy {
 
-    // Data Properties
-    drinks: Drink[] = [];
-
-    // Filter Properties
+    // Properties
+    name: string;
     searchFilterTypes: string[] = [];
-    filteredDrinks: Drink[] = [];
-
-    // Other Properties
+    drinks: DrinkFilter[] = [];
+    drinkFilterSubscription: Subscription;
+    filteredDrinks: DrinkFilter[] = [];
     fetchTimeout: any = null;   // I'm not a fan of the "any" type, but Angular makes using NodeJS.Timeout difficult
 
     // Constructor
     constructor(
-        private cocktailService: CocktailService,
-        private ingredientService: IngredientService
+        private cocktailService: CocktailService
     ) { }
 
     get nameFilter() {
@@ -45,7 +39,7 @@ export class CocktailSearchComponent implements OnInit {
     // Event Functions
     ngOnInit(): void {
         this.searchFilterTypes = Object.keys(this.searchFilters);
-        this.ingredientService.getIngredients().subscribe(ingredientList => {
+        this.cocktailService.getIngredients().subscribe(ingredientList => {
             this.searchFilters[CocktailSearchFilterTypes.Ingredient].options = ingredientList.drinks.map(drink => drink.strIngredient1);
         });
         this.cocktailService.getGlasses().subscribe(glassList => {
@@ -57,35 +51,20 @@ export class CocktailSearchComponent implements OnInit {
         this.cocktailService.getAlcoholicOptions().subscribe(alcoholicList => {
             this.searchFilters[CocktailSearchFilterTypes.Alcholic].options = alcoholicList.drinks.map(drink => drink.strAlcoholic);
         });
-        this.fetchCocktails();
+        this.drinkFilterSubscription = this.cocktailService.drinkFilters.subscribe(drinkFilters => {
+            this.drinks = drinkFilters;
+            this.applyFilter();
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.drinkFilterSubscription.unsubscribe();
     }
 
     // UI Functions
-    queueRefetch() {
-        // PRE: the user makes some change to the search parameters
-        // POST: queues are refresh that will execute so long as nothing else does
-        if (this.fetchTimeout) {
-            clearTimeout(this.fetchTimeout);
-        }
-        this.fetchTimeout = setTimeout(() => {
-            this.fetchCocktails();
-        }, 1000);
-    }
-
-    fetchCocktails() {
-        // POST: obtains the data for the grid
-        this.cocktailService.getCocktailsByName(this.nameFilter).subscribe(drinksContainer => {
-            if (drinksContainer && drinksContainer.drinks) {
-                this.drinks = drinksContainer.drinks;
-            } else {
-                this.drinks = [];
-            }
-            this.applyFilter();
-        });
-        if (this.fetchTimeout) {
-            clearTimeout(this.fetchTimeout);
-            this.fetchTimeout = null;
-        }
+    setFilterByName(newValue: string) {
+        this.name = newValue;
+        this.applyFilter();
     }
 
     setFilterByType(type: string, newValue: string) {
@@ -105,6 +84,9 @@ export class CocktailSearchComponent implements OnInit {
     private applyFilter() {
         // POST: crosses the filter with the data
         this.filteredDrinks = this.drinks.filter(drink => {
+            if (this.name && !drink.strDrink.includes(this.name)) {
+                return false;
+            }
             for (let i = 0; i < this.searchFilterTypes.length; i++) {
                 const searchFilterType = this.searchFilterTypes[i];
                 if (

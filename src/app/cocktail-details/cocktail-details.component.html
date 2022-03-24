@@ -6,6 +6,20 @@
     <div *ngIf="drink" class="main-info">
         <cocktails-cocktail-card [drink]="drink" [navigable]="false"></cocktails-cocktail-card>
         <div>
+            <table>
+                <tr>
+                    <td><b>Category</b></td>
+                    <td>{{drink.strCategory}}</td>
+                </tr>
+                <tr>
+                    <td><b>Glass</b></td>
+                    <td>{{drink.strGlass}}</td>
+                </tr>
+                <tr>
+                    <td><b>Alcoholic</b></td>
+                    <td>{{drink.strAlcoholic}}</td>
+                </tr>
+            </table>
             <h3>How to make it!</h3>
             <div>{{drink.strInstructions}}</div>
         </div>

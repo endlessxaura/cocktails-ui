@@ -7,14 +7,7 @@
 
 <ng-template #cardTemplate>
     <mat-card tabindex="0" *ngIf="drink">
-        <div class="grid">
-            <img [src]="drink.strDrinkThumb" />
-            <div>
-                <span><b>{{drink.strDrink}}</b></span>
-                <span>{{drink.strCategory}}</span>
-                <span>{{drink.strAlcoholic}}</span>
-                <span>{{drink.strGlass}}</span>
-            </div>
-        </div>
+        <img [src]="drink.strDrinkThumb" />
+        <span>{{drink.strDrink}}</span>
     </mat-card>
 </ng-template>

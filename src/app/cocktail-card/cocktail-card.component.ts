@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { DrinkFilter } from '../models/drink-filter.model';
 import { Drink } from '../models/drink.model';
 
 @Component({
@@ -9,7 +10,7 @@ import { Drink } from '../models/drink.model';
 export class CocktailCardComponent implements OnInit {
 
     // Interface Properties
-    @Input() drink: Drink | null;
+    @Input() drink: Drink | DrinkFilter | null;
     @Input() navigable = true;
 
     // Local Properties
