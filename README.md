@@ -8,7 +8,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Notes
-- I spent about 18 hours on this project: 4 hours on 3/21/22, 4 hours on 3/22/22, and 6 hours on 3/23/22. All of these were after 8-hour work days.
+- I spent about 14 hours on this project: 4 hours on 3/21/22, 4 hours on 3/22/22, and 6 hours on 3/23/22. All of these were after 8-hour work days.
 - The cocktails API's "Search cocktail by name" endpoint only returns 25 records with no obvious means of pagination.
 - The "List all cocktails by first letter" endpoint doesn't return all of the cocktails. For instance, using "f=a" doesn't return the drink "Absolutely Fabulous," which you can find at ID 17224: www.thecocktaildb.com/api/json/v1/1/lookup.php?i=17224. 
 - Consequently, I had to do something very strange to pull down a workable list of cocktails. I iterated through all of the possible filter options and extracted all of the values. I make a distinct list of their union and use that as my data source.
