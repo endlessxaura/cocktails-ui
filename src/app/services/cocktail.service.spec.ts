@@ -1,11 +1,14 @@
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { TestBed, waitForAsync } from "@angular/core/testing";
 import { Observable, of } from "rxjs";
+import { AlcoholicListItem } from "../models/alcoholic-list-item.model";
 import { AlcoholicList } from "../models/alcoholic-list.model";
+import { CategoryListItem } from "../models/category-list-item.model";
 import { CategoryList } from "../models/category-list.model";
 import { DrinkFilters } from "../models/drink-filters.model";
 import { Drink } from "../models/drink.model";
 import { Drinks } from "../models/drinks.model";
+import { GlassListFilter } from "../models/glass-list-item.model";
 import { GlassList } from "../models/glass-list.model";
 import { CocktailService } from "./cocktail.service";
 
@@ -32,6 +35,19 @@ describe('CocktailService', () => {
             drink => {
                 expect(drink).toBeTruthy();
                 expect(drink).toBeInstanceOf(Drink);
+                done();
+            },
+            () => {
+                done.fail();
+            }
+        );
+    });
+
+    it('getCocktailById should handle null', (done: DoneFn) => {
+        httpClientSpy.get.and.returnValue(of<Drinks>(new Drinks()));
+        service.getCocktailById('World').subscribe(
+            drink => {
+                expect(drink).toBeNull();
                 done();
             },
             () => {
@@ -69,7 +85,10 @@ describe('CocktailService', () => {
     });
 
     it('getGlasses should return a GlassList', (done: DoneFn) => {
-        httpClientSpy.get.and.returnValue(of<GlassList>(new GlassList()));
+        httpClientSpy.get.and.returnValue(of<GlassList>(new GlassList([
+            new GlassListFilter('Hello'),
+            new GlassListFilter('World')
+        ])));
         service.getGlasses().subscribe(
             drinks => {
                 expect(drinks).toBeTruthy();
@@ -83,7 +102,10 @@ describe('CocktailService', () => {
     });
 
     it('getCategories should return a CategoryList', (done: DoneFn) => {
-        httpClientSpy.get.and.returnValue(of<CategoryList>(new CategoryList()));
+        httpClientSpy.get.and.returnValue(of<CategoryList>(new CategoryList([
+            new CategoryListItem('Hello'),
+            new CategoryListItem('World')
+        ])));
         service.getCategories().subscribe(
             drinks => {
                 expect(drinks).toBeTruthy();
@@ -97,7 +119,10 @@ describe('CocktailService', () => {
     });
 
     it('getAlcoholicOptions should return a AlcoholList', (done: DoneFn) => {
-        httpClientSpy.get.and.returnValue(of<AlcoholicList>(new AlcoholicList()));
+        httpClientSpy.get.and.returnValue(of<AlcoholicList>(new AlcoholicList([
+            new AlcoholicListItem('Alcohol'),
+            new AlcoholicListItem('No alcohol')
+        ])));
         service.getAlcoholicOptions().subscribe(
             drinks => {
                 expect(drinks).toBeTruthy();
